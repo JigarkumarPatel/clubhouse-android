@@ -9,6 +9,7 @@ android {
         targetSdkVersion 30
         versionCode 10
         versionName "1.0.10"
+        vectorDrawables.useSupportLibrary = true
     }
     buildTypes {
         release {
@@ -34,6 +35,8 @@ dependencies {
     implementation 'com.jakewharton:disklrucache:2.0.2'
     implementation 'com.squareup.okhttp3:okhttp:3.14.9'
     implementation 'com.google.code.gson:gson:2.8.6'
+
+//    implementation 'com.github.grishka:appkit:c7854a3'
 
     implementation 'io.agora.rtc:voice-sdk:3.3.2'
     implementation 'com.pubnub:pubnub-gson:4.33.3'

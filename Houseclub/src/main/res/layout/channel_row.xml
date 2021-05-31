@@ -3,8 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#FFF"
-    android:foreground="?android:selectableItemBackground"
+    android:background="@drawable/background_channel_item"
     android:padding="16dp">
 
     <TextView

@@ -2,6 +2,7 @@ package me.grishka.houseclub.fragments;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -18,6 +19,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -54,7 +56,7 @@ public class ProfileFragment extends LoaderFragment {
 
     private TextView name, username, followers, following, followsYou, bio, inviteInfo, twitter, instagram,
             invites;
-    private ImageView photo, inviterPhoto;
+    private ImageView photo, photo_edit_icon, inviterPhoto;
     private Button followBtn, inviteButton;
     private EditText invitePhoneNum;
     private View socialButtons, inviteLayout;
@@ -98,10 +100,15 @@ public class ProfileFragment extends LoaderFragment {
         following.setOnClickListener(this::onFollowingClick);
         v.findViewById(R.id.inviter_btn).setOnClickListener(this::onInviterClick);
         if (self) {
+            photo_edit_icon = v.findViewById(R.id.photo_edit_icon);
+            photo_edit_icon.setVisibility(View.VISIBLE);
             bio.setOnClickListener(this::onBioClick);
-            photo.setOnClickListener(this::onPhotoClick);
+            photo.setOnClickListener(this::PhotoEdit);
             name.setOnClickListener(this::onNameClick);
             inviteButton.setOnClickListener(this::onInviteClick);
+        } else {
+            photo.setOnClickListener(this::PhotoView);
+
         }
 
         return v;
@@ -410,9 +417,25 @@ public class ProfileFragment extends LoaderFragment {
                 .show();
     }
 
-    private void onPhotoClick(View v) {
+    private void PhotoEdit(View v) {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("image/*");
         startActivityForResult(intent, PICK_PHOTO_RESULT);
+    }
+
+    private void PhotoView(View v) {
+        if (user.photoUrl != null) {
+
+            Dialog photoDialog = new Dialog(this.getActivity());
+            photoDialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+
+            ImageView photo = new ImageView(this.getContext());
+            ColorDrawable d = new ColorDrawable(getResources().getColor(R.color.grey));
+            ViewImageLoader.load(photo, d, user.photoUrl);
+            photoDialog.setContentView(photo);
+
+            photoDialog.show();
+
+        }
     }
 }

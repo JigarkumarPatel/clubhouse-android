@@ -4,26 +4,27 @@
         <ripple android:color="?android:attr/colorControlHighlight">
             <item>
                 <shape android:id="@android:id/mask">
-                    <solid android:color="#f2f2f2" />
+                    <solid android:color="#fff" />
+
                     <padding
                         android:bottom="0dp"
                         android:left="8dp"
                         android:right="8dp"
                         android:top="0dp" />
-                    <corners android:radius="28dp" />
+                    <corners android:radius="12dp" />
                 </shape>
             </item>
         </ripple>
     </item>
     <item>
         <shape android:id="@android:id/mask">
-            <solid android:color="#e2e2e2" />
+            <solid android:color="#aaa" />
             <padding
                 android:bottom="0dp"
                 android:left="8dp"
                 android:right="8dp"
                 android:top="0dp" />
-            <corners android:radius="28dp" />
+            <corners android:radius="12dp" />
         </shape>
     </item>
 

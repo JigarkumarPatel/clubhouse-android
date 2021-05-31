@@ -52,9 +52,6 @@ import me.grishka.houseclub.notification.NotificationHandlerBroadcastReceiver;
 
 public class VoiceService extends Service {
 
-    private static final String TAG = "VoiceService";
-    private static ArrayList<ChannelEventListener> listeners = new ArrayList<>();
-    private static VoiceService instance;
     private RtcEngine engine;
     private Channel channel;
     private boolean muted = true;
@@ -71,20 +68,13 @@ public class VoiceService extends Service {
     private ArrayList<Integer> mutedUserIds = new ArrayList<>();
     private boolean isSelfSpeaker, isSelfModerator;
 
+    private static ArrayList<ChannelEventListener> listeners = new ArrayList<>();
+
+    private static VoiceService instance;
+    private static final String TAG = "VoiceService";
+
     public static VoiceService getInstance() {
         return instance;
-    }
-
-    public static void addListener(ChannelEventListener l) {
-        if (!listeners.contains(l))
-            listeners.add(l);
-        if (getInstance() != null) {
-            getInstance().callAddedListener(l);
-        }
-    }
-
-    public static void removeListener(ChannelEventListener l) {
-        listeners.remove(l);
     }
 
     @Nullable
@@ -156,7 +146,6 @@ public class VoiceService extends Service {
     }
 
     private void doJoinChannel() {
-        engine.setAudioProfile(Constants.AUDIO_PROFILE_DEFAULT, Constants.AUDIO_SCENARIO_CHATROOM_ENTERTAINMENT);
         engine.setChannelProfile(isSelfSpeaker ? Constants.CHANNEL_PROFILE_COMMUNICATION : Constants.CHANNEL_PROFILE_LIVE_BROADCASTING);
         engine.joinChannel(channel.token, channel.channel, "", Integer.parseInt(ClubhouseSession.userID));
         uiHandler.postDelayed(pinger, 30000);
@@ -251,6 +240,10 @@ public class VoiceService extends Service {
         uiHandler.removeCallbacks(pinger);
         pubnub.unsubscribeAll();
         pubnub.destroy();
+        uiHandler.post(() -> {
+            for (ChannelEventListener l : listeners)
+                l.onSelfLeft();
+        });
     }
 
     public void leaveCurrentChannel() {
@@ -312,13 +305,13 @@ public class VoiceService extends Service {
         return raisedHand;
     }
 
-    public boolean isMuted() {
-        return muted;
-    }
-
     public void setMuted(boolean muted) {
         this.muted = muted;
         engine.muteLocalAudioStream(muted);
+    }
+
+    public boolean isMuted() {
+        return muted;
     }
 
     public Channel getChannel() {
@@ -341,6 +334,18 @@ public class VoiceService extends Service {
 
     private void callAddedListener(ChannelEventListener l) {
         l.onChannelUpdated(channel);
+    }
+
+    public static void addListener(ChannelEventListener l) {
+        if (!listeners.contains(l))
+            listeners.add(l);
+        if (getInstance() != null) {
+            getInstance().callAddedListener(l);
+        }
+    }
+
+    public static void removeListener(ChannelEventListener l) {
+        listeners.remove(l);
     }
 
     public boolean isSelfSpeaker() {
@@ -428,6 +433,8 @@ public class VoiceService extends Service {
         void onSpeakingUsersChanged(List<Integer> ids);
 
         void onChannelEnded();
+
+        void onSelfLeft();
     }
 
     private class RtcEngineEventHandler extends IRtcEngineEventHandler {

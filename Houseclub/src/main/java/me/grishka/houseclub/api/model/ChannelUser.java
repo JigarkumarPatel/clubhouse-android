@@ -3,17 +3,6 @@ package me.grishka.houseclub.api.model;
 import android.os.Parcel;
 
 public class ChannelUser extends User {
-    public static final Creator<ChannelUser> CREATOR = new Creator<ChannelUser>() {
-        @Override
-        public ChannelUser createFromParcel(Parcel source) {
-            return new ChannelUser(source);
-        }
-
-        @Override
-        public ChannelUser[] newArray(int size) {
-            return new ChannelUser[size];
-        }
-    };
     public boolean isSpeaker;
     public boolean isModerator;
     public boolean isFollowedBySpeaker;
@@ -21,21 +10,9 @@ public class ChannelUser extends User {
     public boolean isNew;
     public String timeJoinedAsSpeaker;
     public String firstName;
+
     public transient boolean isMuted;
 
-    public ChannelUser() {
-    }
-
-    protected ChannelUser(Parcel in) {
-        super(in);
-        this.isSpeaker = in.readByte() != 0;
-        this.isModerator = in.readByte() != 0;
-        this.isFollowedBySpeaker = in.readByte() != 0;
-        this.isInvitedAsSpeaker = in.readByte() != 0;
-        this.isNew = in.readByte() != 0;
-        this.timeJoinedAsSpeaker = in.readString();
-        this.firstName = in.readString();
-    }
 
     @Override
     public int describeContents() {
@@ -64,4 +41,30 @@ public class ChannelUser extends User {
         this.timeJoinedAsSpeaker = source.readString();
         this.firstName = source.readString();
     }
+
+    public ChannelUser() {
+    }
+
+    protected ChannelUser(Parcel in) {
+        super(in);
+        this.isSpeaker = in.readByte() != 0;
+        this.isModerator = in.readByte() != 0;
+        this.isFollowedBySpeaker = in.readByte() != 0;
+        this.isInvitedAsSpeaker = in.readByte() != 0;
+        this.isNew = in.readByte() != 0;
+        this.timeJoinedAsSpeaker = in.readString();
+        this.firstName = in.readString();
+    }
+
+    public static final Creator<ChannelUser> CREATOR = new Creator<ChannelUser>() {
+        @Override
+        public ChannelUser createFromParcel(Parcel source) {
+            return new ChannelUser(source);
+        }
+
+        @Override
+        public ChannelUser[] newArray(int size) {
+            return new ChannelUser[size];
+        }
+    };
 }

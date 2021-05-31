@@ -81,17 +81,11 @@ public abstract class UserListFragment extends BaseRecyclerFragment<FullUser> {
 
         @Override
         public int getImageCountForItem(int position) {
-            if (position == -1) {
-                position++;
-            }
             return data.get(position).photoUrl != null ? 1 : 0;
         }
 
         @Override
         public String getImageURL(int position, int image) {
-            if (position == -1) {
-                position++;
-            }
             return data.get(position).photoUrl;
         }
     }
